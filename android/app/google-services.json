@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "461521879038",
+    "project_id": "chat-bpc",
+    "storage_bucket": "chat-bpc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461521879038:android:e966308ae76994204d0aaf",
+        "android_client_info": {
+          "package_name": "com.example.bpc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461521879038-5u1cb2n822ctk7rc5q73pvg23n1ibg7m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bpc",
+            "certificate_hash": "42d58827baf9fc6eecb91ad1b0cdf8818cec1b15"
+          }
+        },
+        {
+          "client_id": "461521879038-ltdec6afadtumuhmsu264j5ihk8k6oju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfe3RYHMyGc98wAW93CeGxQ75ZNZocm7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461521879038-ltdec6afadtumuhmsu264j5ihk8k6oju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
