@@ -1,6 +1,10 @@
+import 'package:bpc/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:bpc/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
+import 'package:bpc/pages/auth/login_page.dart';
+import 'package:bpc/helper/helper_function.dart';
+import 'package:bpc/pages/home_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,18 +14,20 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  bool _isLoading = false;
   final formKey = GlobalKey<FormState>();
   String username = "";
   String password = "";
   String fullName = "";
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: _isLoading ? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)) : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 20,
-            vertical: 80,
+            vertical: 50,
           ),
           child: Form(
             key: formKey,
@@ -41,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 const Text(
-                  'Immerse Yourself In A Pool Of Words',
+                  'Join The Social World',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
@@ -51,6 +57,30 @@ class _RegisterPageState extends State<RegisterPage> {
                 Image.asset(
                   'assets/lisu.png',
                   height: 300,
+                ),
+                TextFormField(
+                  decoration: textInputDecoration.copyWith(
+                    labelText: "Full Name",
+                    prefixIcon: Icon(
+                      Icons.book,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  validator: (val) {
+                    if (val!.isNotEmpty) {
+                      return null;
+                    } else {
+                      return "Name cannot be empty";
+                    }
+                  },
+                  onChanged: (val) {
+                    setState(() {
+                      fullName = val;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 TextFormField(
                   decoration: textInputDecoration.copyWith(
@@ -112,9 +142,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      register();
+                    },
                     child: const Text(
-                      'Sign In',
+                      'Register',
                     ),
                   ),
                 ),
@@ -123,21 +155,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Text.rich(
                   TextSpan(
-                    text: 'Don\'t have an account? ',
+                    text: 'Already have an account? ',
                     style: const TextStyle(
                       color: Color(0xff555555),
                       fontSize: 14,
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                          text: 'Create One!',
+                          text: 'Sign In!',
                           style: const TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
                           ),
-                          recognizer: TapGestureRecognizer()..onTap = () {
-                            nextScreen(context, const RegisterPage());
-                          }),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              nextScreen(context, const LoginPage());
+                            }),
                     ],
                   ),
                 ),
@@ -147,5 +180,26 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  register() async {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService.registerUserWithEmailandPassword(fullName, username, password).then((value) async {
+        if (value == true) {
+          await HelperFunction.saveUserLoggedInStatus(true);
+          await HelperFunction.saveUserEmailSF(username);
+          await HelperFunction.saveUserNameSF(fullName);
+          nextScreenReplace(context, const HomePage());
+        } else {
+          showSnackbar(context, Colors.red, value);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    }
   }
 }
